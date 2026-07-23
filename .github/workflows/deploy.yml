@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Kind Cluster
+        uses: helm/kind-action@v1
+        with:
+          config: cluster.yml
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Dry Run
+        run: |
+          helm install todoapp helm-charts/todoapp --dry-run
+
+      - name: Deploy
+        run: |
+          helm upgrade --install todoapp helm-charts/todoapp --atomic
