@@ -94,11 +94,13 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     with:
       environment: development
-    secrets: inherit
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
   deploy-staging:
     needs: deploy-development
     uses: ./.github/workflows/deploy.yml
     with:
       environment: staging
-    secrets: inherit
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
